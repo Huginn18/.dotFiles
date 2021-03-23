@@ -12,7 +12,7 @@ myModMask :: KeyMask
 myModMask = mod4Mask -- super/windows key | default: mod1Mask left alt
 
 myTerminal :: String
-myTerminal="gnome-terminal"
+myTerminal="alacritty"
 
 -- --- -- - -- ---
 -- HOOKS
