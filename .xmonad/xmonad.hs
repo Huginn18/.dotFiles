@@ -1,9 +1,15 @@
 import XMonad
 
+-- --- -- - -- --- -- - -- --- -- - -- ---
+-- IMPORTS: HOOKS
+-- --- -- - -- --- -- - -- --- -- - -- ---
+import XMonad.Hooks.EwmhDesktops
+
 -- --- -- - -- ---
--- Utils
+-- IMPORTS: UTIL
 -- --- -- - -- ---
 import XMonad.Util.SpawnOnce
+import XMonad.Util.Run
 
 -- --- -- - -- ---
 -- VARIABLES
@@ -37,16 +43,17 @@ myStartupHook = do
 
 -- --- -- - -- --- -- - -- ---
 -- MAIN
-main = xmonad defaultConfig
-        {
-          borderWidth = myBorderWidth 
+-- --- -- - -- --- -- - -- ---
+main = do
+    xmproc0 <- spawnPipe "xmobar -x 0 /home/huginn/.config/xmobar/xmobarrc"     
+    xmonad $ ewmh def
+        { borderWidth = myBorderWidth 
         , normalBorderColor = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
 
         , modMask = mod4Mask -- Use Super instead of Alt
         , terminal = myTerminal
         , focusFollowsMouse = myFocusFollowsMouse
-        -- hooks
+          -- hooks
         , startupHook = myStartupHook
-        }
-
+        } 
