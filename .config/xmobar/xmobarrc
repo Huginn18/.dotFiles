@@ -1,25 +1,26 @@
 Config { 
-
+   -- general behavior
+     lowerOnStart =     True    -- send to bottom of window stack on start
+    , hideOnStart =      False   -- start with window unmapped (hidden)
+    , allDesktops =      True    -- show on all desktops
+    , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
+    , pickBroadest =     False   -- choose widest display (multi-monitor)
+    , persistent =       True    -- enable/disable hiding (True = disabled)
+    
    -- appearance
-     font =         "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true"
-   , bgColor =      "black"
-   , fgColor =      "#646464"
-   , position =     Top
-   , border =       BottomB
-   , borderColor =  "#646464"
+    , font =         "xft:UbuntuMono:pixelsize=14:weight=bold:hinting=true:antialias=true"
+    , bgColor           ="#1d2021"
+    , fgColor           = "#ebdbb2"
+    , position          = Top
+    , border            = BottomB
+    , borderWidth       = 4
+    , borderColor       =  "#32302f"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "%battery% | %multicpu% | %coretemp% | %memory% | %dynnetwork% }{ %RJTT% | %date% || %kbd% "
+   , template = "%StdinReader% %battery% | %multicpu% | %coretemp% | %memory% | %dynnetwork% }{ %RJTT% | %date% || %kbd% "
 
-   -- general behavior
-   , lowerOnStart =     True    -- send to bottom of window stack on start
-   , hideOnStart =      False   -- start with window unmapped (hidden)
-   , allDesktops =      True    -- show on all desktops
-   , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
-   , pickBroadest =     False   -- choose widest display (multi-monitor)
-   , persistent =       True    -- enable/disable hiding (True = disabled)
 
    -- plugins
    --   Numbers can be automatically colored according to their value. xmobar
@@ -102,6 +103,7 @@ Config {
         , Run Kbd            [ ("us(dvorak)" , "<fc=#00008B>DV</fc>")
                              , ("us"         , "<fc=#8B0000>US</fc>")
                              ]
+        , Run StdinReader
         ]
    }
 

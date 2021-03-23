@@ -24,6 +24,7 @@ import XMonad.Layout.Grid
 -- --- -- - -- --- -- - -- --- -- - -- ---
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.DynamicLog
 
 -- --- -- - -- ---
 -- IMPORTS: UTILS
@@ -58,6 +59,31 @@ myStartupHook = do
     spawnOnce "nitrogen --restore &"
     spawnOnce "compton &"
 
+
+myLogHook xmobar = dynamicLogWithPP $ defaultPP
+    { 
+    --how to print the tag of the currently focused workspace
+      ppCurrent         = xmobarColor "#ff0000" "" . wrap "[" "]" 
+    --how to print tags of invisible workspaces which contain windows
+    , ppHidden          = xmobarColor "#00ff00" "" . wrap "*" ""
+    --how to print tags of empty invisible workspaces
+    , ppHiddenNoWindows= xmobarColor "#0000ff" ""
+    --format to be applied to tags of urgent workspaces
+    , ppUrgent          = xmobarColor "#ff00ff" "" . wrap "!" "!"
+    --separator to use between different log sections
+    , ppSep             = "<fc=#f0000f> | </fc>" 
+    -- separator to use between workspace tags
+    , ppWsSep           = ""
+    --window title format
+    , ppTitle           = xmobarColor "#ff0000" "" . shorten 32
+    --layout name format
+    , ppLayout          = xmobarColor "#00ff00" ""
+    --how to order the different log sections
+    , ppOrder           = \(ws:t:ex) -> [ws]++ex++[t]
+    --, ppExtras = 
+
+    , ppOutput = \x -> hPutStrLn xmobar x
+    }
 -- --- -- - -- ---
 -- LAYOUT
 -- --- -- - -- ---
@@ -76,6 +102,11 @@ myLayoutHook = avoidStruts $ layoutSet
         layoutGrid = spacing 8 $ Grid
         layoutTall = Tall nMaster delta ratio12
         layoutSet = toggleLayouts Full (layoutTall ||| layoutGrid ||| Full)
+
+-- --- -- - -- --- 
+-- WORKSPACES
+-- --- -- - -- --- 
+myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 -- --- -- - -- ---
 -- HOTKEYS
@@ -105,24 +136,27 @@ myKeys =
 
     -- Workspace Controls
     , ("M-<R>", nextWS)
-    , ("M-<L>", prevWS)
+    , ("M-<L>", prevWS) 
    ]
 
 -- --- -- - -- --- -- - -- ---
 -- MAIN
 -- --- -- - -- --- -- - -- ---
 main = do
-    xmproc0 <- spawnPipe "xmobar -x 0 /home/huginn/.config/xmobar/xmobarrc"     
+    xmobar  <- spawnPipe "xmobar -x 0 /home/huginn/.config/xmobar/xmobarrc"   
+
     xmonad $ ewmh def
         { borderWidth = myBorderWidth 
         , normalBorderColor = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
-
         , modMask = mod4Mask -- Use Super instead of Alt
         , terminal = myTerminal
         , focusFollowsMouse = myFocusFollowsMouse
+
+        , workspaces = myWorkspaces
           -- hooks
         , startupHook = myStartupHook
         , layoutHook = myLayoutHook
         , handleEventHook = docksEventHook
+        , logHook = myLogHook xmobar
         }`additionalKeysP` myKeys 
