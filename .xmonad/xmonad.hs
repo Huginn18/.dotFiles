@@ -1,5 +1,6 @@
 import System.Exit
 
+--    ,  Run Com '/home/huginn/.config/bin/spotify.sh' 'spoti' 10
 -- --- -- - -- --- -- - -- --- -- - -- ---
 -- IMPORTS: XMonad
 -- --- -- - -- --- -- - -- --- -- - -- ---
@@ -66,10 +67,16 @@ instance UrgencyHook LibNotifyUrgencyHook where
 -- HOOKS
 -- --- -- - -- ---
 myStartupHook = do
-    spawnOnce "nitrogen --restore &"
-    spawnOnce "compton &"
+    spawnOnce   "nitrogen --restore &"
+    spawnOnce   "compton &"
+    spawnOnce   "spotify"
+-- --- -- - -- --- -- - -- ---
+    spawnOnce   "keepassxc"
+    spawnOnce   "signal-desktop"
+-- --- -- - -- --- -- - -- ---
+    spawnOnce   "firefox"
 
-
+-- --- -- - -- --- -- - -- --- -- - -- --- -- - -- ---
 myLogHook xmobar = dynamicLogWithPP $ defaultPP
     { 
     --how to print the tag of the currently focused workspace
@@ -89,11 +96,19 @@ myLogHook xmobar = dynamicLogWithPP $ defaultPP
     --layout name format
     , ppLayout          = xmobarColor "#00ff00" ""
     --how to order the different log sections
-    , ppOrder           = \(ws:t:ex) -> [ws]++ex
+    , ppOrder           = \(ws:t:ex) -> [ws]
     --, ppExtras = 
 
     , ppOutput = \x -> hPutStrLn xmobar x
     }
+
+-- --- -- - -- --- -- - -- --- -- - -- --- -- - -- ---
+myManageWindowsHook = composeAll
+    [
+      className =? "Signal"     --> doShift "8: im"
+    , className =? "keepassxc"  --> doShift "9: pass"
+    , className =? "Firefox"    --> doShift "2: www"
+    ]
 -- --- -- - -- ---
 -- LAYOUT
 -- --- -- - -- ---
@@ -116,7 +131,7 @@ myLayoutHook = avoidStruts $ layoutSet
 -- --- -- - -- --- 
 -- WORKSPACES
 -- --- -- - -- --- 
-myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+myWorkspaces = ["1: music", "2: www", "3: dev", "4: unity", "5", "6", "7", "8: im", "9: pass"]
 
 -- --- -- - -- ---
 -- HOTKEYS
@@ -154,6 +169,11 @@ myKeys =
     , ("M-<D>",lowerVolume 5 >> return())
     , ("<XF86AudioRaiseVolume>",raiseVolume 5 >> return())
     , ("M-<U>",raiseVolume 5 >> return())
+    
+    -- Music Control
+    , ("M-S-<L>", spawn "playerctl previous")
+    , ("M-S-<R>", spawn "playerctl next")
+    , ("M-S-<Space>", spawn "playerctl play-pause")
     ]
 
 -- --- -- - -- --- -- - -- ---
@@ -175,4 +195,5 @@ main = do
         , layoutHook = myLayoutHook
         , handleEventHook = docksEventHook
         , logHook = myLogHook xmobar
+        , manageHook = myManageWindowsHook
         }`additionalKeysP` myKeys 

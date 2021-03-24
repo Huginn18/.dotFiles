@@ -23,7 +23,7 @@ Config {
     -- layout
     , sepChar =  "%"   -- delineator between plugin names and straight text
     , alignSep = "}{"  -- separator between left-right alignment
-    , template = "%StdinReader% }{ %multicpu% | %memory% ||  %date%  || %default:Master% || %battery%"
+    , template = "%StdinReader%  ||  %music% }{  %multicpu% | %memory% ||  %date%  || %default:Master% || %battery%"
 
     , commands = 
     [ 
@@ -81,6 +81,7 @@ Config {
             , "--off"       , "| |" 
             , "--offc"      , "#665c54"
         ] 1 
+    , Run Com "/home/huginn/.config/bin/spotify.sh" [ ] "music" 5
     ]
 }
 
