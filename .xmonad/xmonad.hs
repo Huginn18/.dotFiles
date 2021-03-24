@@ -1,6 +1,5 @@
 import System.Exit
 
-
 -- --- -- - -- --- -- - -- --- -- - -- ---
 -- IMPORTS: XMonad
 -- --- -- - -- --- -- - -- --- -- - -- ---
@@ -11,6 +10,7 @@ import qualified XMonad.StackSet as W
 -- IMPORTS: ACTIONS
 -- --- -- - -- --- -- - -- --- -- - -- ---
 import XMonad.Actions.CycleWS
+import XMonad.Actions.Volume
 
 -- --- -- - -- --- -- - -- --- -- - -- ---
 -- IMPORTS: LAYOUT
@@ -25,6 +25,7 @@ import XMonad.Layout.Grid
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.UrgencyHook
 
 -- --- -- - -- ---
 -- IMPORTS: UTILS
@@ -32,7 +33,8 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Util.EZConfig
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
-
+import XMonad.Util.NamedWindows
+import XMonad.Util.Run
 
 
 -- --- -- - -- ---
@@ -52,6 +54,14 @@ myTerminal="alacritty"
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = False
 
+data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
+instance UrgencyHook LibNotifyUrgencyHook where
+    urgencyHook LibNotifyUrgencyHook w = do
+        name     <- getName w
+        Just idx <- fmap (W.findTag w) $ gets windowset
+
+        safeSpawn "notify-send" [show name, "workspace " ++ idx]
+
 -- --- -- - -- ---
 -- HOOKS
 -- --- -- - -- ---
@@ -63,23 +73,23 @@ myStartupHook = do
 myLogHook xmobar = dynamicLogWithPP $ defaultPP
     { 
     --how to print the tag of the currently focused workspace
-      ppCurrent         = xmobarColor "#ff0000" "" . wrap "[" "]" 
+      ppCurrent         = xmobarColor "#ebdbb2" "" . wrap "[" "]" 
     --how to print tags of invisible workspaces which contain windows
-    , ppHidden          = xmobarColor "#00ff00" "" . wrap "*" ""
+    , ppHidden          = xmobarColor "#a89984" "" . wrap "*" ""
     --how to print tags of empty invisible workspaces
-    , ppHiddenNoWindows= xmobarColor "#0000ff" ""
+    , ppHiddenNoWindows = xmobarColor "#665c54" ""
     --format to be applied to tags of urgent workspaces
     , ppUrgent          = xmobarColor "#ff00ff" "" . wrap "!" "!"
     --separator to use between different log sections
-    , ppSep             = "<fc=#f0000f> | </fc>" 
+    , ppSep             = "<fc=#665c54> | </fc>" 
     -- separator to use between workspace tags
-    , ppWsSep           = ""
+    , ppWsSep           =  "<fc=#665c54> : </fc>"
     --window title format
-    , ppTitle           = xmobarColor "#ff0000" "" . shorten 32
+    , ppTitle           = xmobarColor "#665c54" "" . shorten 32
     --layout name format
     , ppLayout          = xmobarColor "#00ff00" ""
     --how to order the different log sections
-    , ppOrder           = \(ws:t:ex) -> [ws]++ex++[t]
+    , ppOrder           = \(ws:t:ex) -> [ws]++ex
     --, ppExtras = 
 
     , ppOutput = \x -> hPutStrLn xmobar x
@@ -137,15 +147,21 @@ myKeys =
     -- Workspace Controls
     , ("M-<R>", nextWS)
     , ("M-<L>", prevWS) 
-   ]
+    
+    -- Volume Control
+    , ("<XF86AudioMute>",toggleMute >> return())
+    , ("<XF86AudioLowerVolume>",lowerVolume 5 >> return())
+    , ("M-<D>",lowerVolume 5 >> return())
+    , ("<XF86AudioRaiseVolume>",raiseVolume 5 >> return())
+    , ("M-<U>",raiseVolume 5 >> return())
+    ]
 
 -- --- -- - -- --- -- - -- ---
 -- MAIN
 -- --- -- - -- --- -- - -- ---
 main = do
     xmobar  <- spawnPipe "xmobar -x 0 /home/huginn/.config/xmobar/xmobarrc"   
-
-    xmonad $ ewmh def
+    xmonad $ withUrgencyHook LibNotifyUrgencyHook $ ewmh def
         { borderWidth = myBorderWidth 
         , normalBorderColor = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
