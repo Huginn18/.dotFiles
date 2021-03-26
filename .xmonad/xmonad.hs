@@ -111,6 +111,7 @@ myManageWindowsHook = composeAll
     , className =? "discord"    --> doShift "8: im"
     , className =? "UnityHub"   --> doShift "4: unity"
     , className =? "jetbrains-toolbox" --> doShift "3: dev"
+    , className =? "jetbrains-rider" --> doShift "3: dev"
     , className =? "Unity"      --> doShift "4: unity"
     , className =? "Unity"      --> doF W.focusDown
     ]
