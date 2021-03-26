@@ -112,6 +112,7 @@ myManageWindowsHook = composeAll
     , className =? "UnityHub"   --> doShift "4: unity"
     , className =? "jetbrains-toolbox" --> doShift "3: dev"
     , className =? "Unity"      --> doShift "4: unity"
+    , className =? "Unity"      --> doF W.focusDown
     ]
 -- --- -- - -- ---
 -- LAYOUT
