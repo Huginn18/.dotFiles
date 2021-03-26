@@ -1,6 +1,5 @@
 import System.Exit
 
---    ,  Run Com '/home/huginn/.config/bin/spotify.sh' 'spoti' 10
 -- --- -- - -- --- -- - -- --- -- - -- ---
 -- IMPORTS: XMonad
 -- --- -- - -- --- -- - -- --- -- - -- ---
@@ -73,9 +72,10 @@ myStartupHook = do
 -- --- -- - -- --- -- - -- ---
     spawnOnce   "keepassxc"
     spawnOnce   "signal-desktop"
+    spawnOnce   "discord"
 -- --- -- - -- --- -- - -- ---
     spawnOnce   "firefox"
-
+    spawnOnce   "~/.config/bin/initAudioVolume.sh"
 -- --- -- - -- --- -- - -- --- -- - -- --- -- - -- ---
 myLogHook xmobar = dynamicLogWithPP $ defaultPP
     { 
@@ -90,7 +90,7 @@ myLogHook xmobar = dynamicLogWithPP $ defaultPP
     --separator to use between different log sections
     , ppSep             = "<fc=#665c54> | </fc>" 
     -- separator to use between workspace tags
-    , ppWsSep           =  "<fc=#665c54> : </fc>"
+    , ppWsSep           =  "<fc=#665c54> | </fc>"
     --window title format
     , ppTitle           = xmobarColor "#665c54" "" . shorten 32
     --layout name format
@@ -108,11 +108,15 @@ myManageWindowsHook = composeAll
       className =? "Signal"     --> doShift "8: im"
     , className =? "keepassxc"  --> doShift "9: pass"
     , className =? "Firefox"    --> doShift "2: www"
+    , className =? "discord"    --> doShift "8: im"
+    , className =? "UnityHub"   --> doShift "4: unity"
+    , className =? "jetbrains-toolbox" --> doShift "3: dev"
+    , className =? "Unity"      --> doShift "4: unity"
     ]
 -- --- -- - -- ---
 -- LAYOUT
 -- --- -- - -- ---
-myLayoutHook = avoidStruts $ layoutSet
+myLayoutHook = avoidStruts $ spacing 6 $ layoutSet
     where
 
         -- --- -- - --
@@ -123,8 +127,8 @@ myLayoutHook = avoidStruts $ layoutSet
         delta = 3/100   -- percent of screen to increment when resizing
 
         --
-        tiledLayout = spacing 8 $ Tall nMaster delta ratio12
-        layoutGrid = spacing 8 $ Grid
+        tiledLayout = Tall nMaster delta ratio12
+        layoutGrid = Grid
         layoutTall = Tall nMaster delta ratio12
         layoutSet = toggleLayouts Full (layoutTall ||| layoutGrid ||| Full)
 
@@ -140,6 +144,7 @@ myKeys :: [(String, X ())]
 myKeys = 
     [ ("M-S-q", io (exitWith ExitSuccess))
     , ("M-S-c", kill)
+    , ("M-S-l", spawn "xscreensaver-command -l")
     , ("M-q", spawn "xmonad --recompile; killall xmobar; xmonad --restart")
     , ("M-p", spawn "dmenu_run")
     , ("M-S-<Return>", spawn(myTerminal))
@@ -159,6 +164,7 @@ myKeys =
     , ("M-C-k", sendMessage (IncMasterN 1))
     , ("M-C-j", sendMessage (IncMasterN (-1))) 
 
+    , ("M-f", withFocused $ windows . (flip W.float $ W.RationalRect 0 0 1 1))
     -- Workspace Controls
     , ("M-<R>", nextWS)
     , ("M-<L>", prevWS) 

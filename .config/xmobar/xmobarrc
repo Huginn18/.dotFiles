@@ -62,11 +62,11 @@ Config {
 
         , "--" -- battery specific options
         -- discharging status
-        , "-o"	        , "<left>% "
+        , "-o"	        , "[<left>} "
         -- AC "on" status
-        , "-O"	        , "++<left>% [<timeleft>]++ "
+        , "-O"	        , "[+<left>% [<timeleft>]+}"
         -- charged status
-        , "-i"	        , "<fc=#98971a>[- +}</fc> "
+        , "-i"	        , "<fc=#98971a>[- 100 +}</fc> "
         ] 50
 
     -- time and date indicator 

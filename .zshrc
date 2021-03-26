@@ -1,14 +1,20 @@
-# Set up the prompt
+export PATH=$HOME/bin/:$HOME/.local/bin/:$HOME/.config/bin/:$PATH
 
-autoload -Uz promptinit
-promptinit
-prompt adam1
+#LD_PRELOAD=/usr/lib/libcurl.4.so:/home/huginn/.config/bin/spotifywm.so /snap/bin/spotify
 
-setopt histignorealldups sharehistory
+# === == = == === == = == ===
+# Prompt
+# === == = == === == = == ===
+setopt PROMPT_SUBST
+#autoload -Uz vcs_info
+#precmd() { vcs_info }
 
-# Use emacs keybindings even if our EDITOR is set to vi
-bindkey -e
+#zstyle ':vcs_info:git:*' formats 'on branch %b'
 
+PROMPT='${PWD/#$HOME/~}> '
+#PROMPT='${PWD/#$HOME/~} %F{012}git: %F{004}${vcs_info_msg_0_}%F{015}> '
+
+#git check-ignore -q . 2>/dev/null; if [ "$?" -ne "128" ]; then PROMPT='???'
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=1000
 SAVEHIST=1000
@@ -42,3 +48,12 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 alias app-install="sudo apt install"
 alias app-search="apt search"
 alias dotfiles='/usr/bin/git --git-dir=$HOME/projects/.dotfiles/ --work-tree=$HOME'
+alias music='/home/huginn/.config/bin/spotify.sh'
+
+# === == = == === == = == === == = == ===
+#                   GPG
+# === == = == === == = == === == = == ===
+unset SSH_AGENT_PID
+     if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+       export SSH_AUTH_SOCK="${HOME}/.gnupg/S.gpg-agent.ssh"
+     fi
