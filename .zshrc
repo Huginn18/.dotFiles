@@ -47,8 +47,15 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 # === == = == === == = == === == = == ===
 alias app-install="sudo apt install"
 alias app-search="apt search"
+alias app-update="sudo apt update"
 alias dotfiles='/usr/bin/git --git-dir=$HOME/projects/.dotfiles/ --work-tree=$HOME'
 alias music='/home/huginn/.config/bin/spotify.sh'
+alias deb='sudo dpkg -i'
+
+alias vpn='sudo surfshark-vpn'
+alias vpn-q='sudo surfshark-vpn attack'
+alias vpn-d='sudo surfshark-vpn down'
+alias vpn-s='sudo surfshark-vpn status'
 
 # === == = == === == = == === == = == ===
 #                   GPG
