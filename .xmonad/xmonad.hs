@@ -68,6 +68,7 @@ instance UrgencyHook LibNotifyUrgencyHook where
 myStartupHook = do
     spawnOnce   "nitrogen --restore &"
     spawnOnce   "compton &"
+    spawnOnce   "xscreensaver -nosplash &"
     spawnOnce   "spotify"
 -- --- -- - -- --- -- - -- ---
     spawnOnce   "keepassxc"
