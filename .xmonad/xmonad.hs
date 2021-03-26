@@ -23,7 +23,6 @@ import XMonad.Layout.Grid
 -- IMPORTS: HOOKS
 -- --- -- - -- --- -- - -- --- -- - -- ---
 import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.UrgencyHook
 
@@ -190,7 +189,7 @@ myKeys =
 -- --- -- - -- --- -- - -- ---
 main = do
     xmobar  <- spawnPipe "xmobar -x 0 /home/huginn/.config/xmobar/xmobarrc"   
-    xmonad $ withUrgencyHook LibNotifyUrgencyHook $ ewmh def
+    xmonad $ withUrgencyHook LibNotifyUrgencyHook $ defaultConfig
         { borderWidth = myBorderWidth 
         , normalBorderColor = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
