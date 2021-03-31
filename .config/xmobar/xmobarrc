@@ -1,4 +1,4 @@
-Config { 
+Config {
     -- general behavior
       lowerOnStart =     True    -- send to bottom of window stack on start
     , hideOnStart =      False   -- start with window unmapped (hidden)
@@ -6,7 +6,7 @@ Config {
     , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
     , pickBroadest =     False   -- choose widest display (multi-monitor)
     , persistent =       True    -- enable/disable hiding (True = disabled)
-    
+
     -- appearance
     , font =         "xft:UbuntuMono:pixelsize=14:weight=bold:hinting=true:antialias=true"
     , additionalFonts =
@@ -25,11 +25,11 @@ Config {
     , alignSep = "}{"  -- separator between left-right alignment
     , template = "%StdinReader%  ||  %music% }{  %multicpu% | %memory% ||  %date%  || %default:Master% || %battery%"
 
-    , commands = 
-    [ 
+    , commands =
+    [
       Run StdinReader
     -- cpu activity monitor
-    , Run MultiCpu      
+    , Run MultiCpu
         [
           "--template"      , "Cpu: <total0>%|<total1>%"
         , "--Low"           , "50"         -- units: %
@@ -40,8 +40,8 @@ Config {
         ] 10
 
     -- memory usage monitor
-    , Run Memory        
-        [ 
+    , Run Memory
+        [
           "--template"      ,"Mem: <usedratio>%"
         , "--Low"           , "50"        -- units: %
         , "--High"          , "75"        -- units: %
@@ -51,8 +51,8 @@ Config {
         ] 10
 
     -- battery monitor
-    , Run Battery        
-        [ 
+    , Run Battery
+        [
           "--template"      , "<acstatus>"
         , "--Low"           , "25"        -- units: %
         , "--High"          , "75"        -- units: %
@@ -62,25 +62,25 @@ Config {
 
         , "--" -- battery specific options
         -- discharging status
-        , "-o"	        , "[<left>} "
+        , "-o"	        , "[ <left> } "
         -- AC "on" status
         , "-O"	        , "[+<left>% [<timeleft>]+}"
         -- charged status
-        , "-i"	        , "<fc=#98971a>[- 100 +}</fc> "
+        , "-i"	        , "<fc=#98971a>[- 00 +}</fc> "
         ] 50
 
-    -- time and date indicator 
+    -- time and date indicator
     --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
     , Run Date           "<fc=#ABABAB>%F %T</fc>" "date" 10
-    , Run Volume "default" "Master" 
-        [ 
+    , Run Volume "default" "Master"
+        [
           "--template"      , "<status><volume>%"
             , "--"
             , "--on"        , "|o|"
             , "--onc"       , "#ebdbb2"
-            , "--off"       , "| |" 
+            , "--off"       , "| |"
             , "--offc"      , "#665c54"
-        ] 1 
+        ] 1
     , Run Com "/home/huginn/.config/bin/spotify.sh" [ ] "music" 5
     ]
 }
